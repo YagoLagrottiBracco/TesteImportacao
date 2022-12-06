@@ -5,6 +5,7 @@
     import ButtonForms from '@/Components/ButtonForms.vue';
     import InputLabel from '@/Components/InputLabel.vue';
     import TextInput from '@/Components/TextInput.vue';
+    import InputError from '@/Components/InputError.vue';
 
     defineProps({
         clients: Array,
@@ -43,6 +44,9 @@
                                 type="file"
                                 class="mt-1 text-white rounded-lg bg-red-600"
                             />
+                            <div v-for="error in form.errors">
+                                <InputError class="mt-2" :message="error" />
+                            </div>
                             <button type="submit" class="ml-2 inline-block rounded-lg bg-red-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-red-600 hover:bg-red-700 hover:ring-red-700">Send</button>
                         </form>
                         <progress v-if="form.progress" :value="form.progress.percentage" max="100">

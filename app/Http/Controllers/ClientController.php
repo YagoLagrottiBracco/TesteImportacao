@@ -18,7 +18,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Clients/List', ['clients' => Client::all()]);
+        return Inertia::render('Clients/List', ['clients' => Client::paginate(100)]);
     }
 
     /**
@@ -90,7 +90,9 @@ class ClientController extends Controller
      */
     public function import(Request $request)
     {
-        Excel::import(new ClientsImport, $request->file()['import']);
+        ini_set('max_execution_time', -1);
+
+        Excel::queueImport(new ClientsImport, $request->file()['import']);
 
         return $this->index();
     }
