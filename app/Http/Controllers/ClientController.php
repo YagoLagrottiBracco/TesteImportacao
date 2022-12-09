@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Imports\ClientsImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Validator;
 
 class ClientController extends Controller
 {
@@ -39,8 +40,8 @@ class ClientController extends Controller
      */
     public function store(ClientRequest $request)
     {
-        Client::create($request->all());
 
+        Client::create($request->all());
         return $this->index();
     }
 
@@ -91,6 +92,12 @@ class ClientController extends Controller
     public function import(Request $request)
     {
         ini_set('max_execution_time', -1);
+        ini_set('xdebug.max_nesting_level', -1);
+        ini_set('memory_limit', -1);
+
+        Validator::make($request->all(), [
+            'import' => 'required|mimes:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,xlsx,csv,xls,text,text/csv,application/csv',
+        ])->validate();
 
         Excel::queueImport(new ClientsImport, $request->file()['import']);
 

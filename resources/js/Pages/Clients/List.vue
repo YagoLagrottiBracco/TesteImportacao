@@ -7,6 +7,8 @@
     import TextInput from '@/Components/TextInput.vue';
     import InputError from '@/Components/InputError.vue';
 
+    const done = false;
+
     defineProps({
         clients: Array,
     });
@@ -17,7 +19,7 @@
 
     const submit = () => {
         form.post(route('clients.import'), {
-            onFinish: () => form.reset(),
+            onFinish: () => this.done = true,
             forceFormData: true,
         });
     };
@@ -42,10 +44,14 @@
                                 id="import"
                                 @input="form.import = $event.target.files[0]"
                                 type="file"
+                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                 class="mt-1 text-white rounded-lg bg-red-600"
                             />
                             <div v-for="error in form.errors">
                                 <InputError class="mt-2" :message="error" />
+                            </div>
+                            <div v-if="done == true">
+                                <label class="block text-green-600 text-sm font-bold mb-2">CSV successfully imported</label>
                             </div>
                             <button type="submit" class="ml-2 inline-block rounded-lg bg-red-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-red-600 hover:bg-red-700 hover:ring-red-700">Send</button>
                         </form>
